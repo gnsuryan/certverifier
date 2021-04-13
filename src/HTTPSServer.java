@@ -18,7 +18,6 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 
-
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.HttpGet;
@@ -49,27 +48,46 @@ public class HTTPSServer
     public HttpServer server;
     public SSLContext serverSSLContext;
     private CloseableHttpClient httpclient;
-    private String keystoreType;
+
+    private String identityKeyStoreType;
     private String identityKeyStore;
-    private String trustKeyStore;
     private String identityKeyStorePassPhrase;
+    private String identityKeyPass;
+
+    private String trustKeyStoreType;
+    private String trustKeyStore;
     private String trustKeyStorePassPhrase;
+    private String trustKeyPass;
 
-    public HTTPSServer(String keystoreType, String identityKeyStore, String trustKeyStore,
-            String identityKeyStorePassPhrase, String trustKeyStorePassPhrase) throws Exception
+    public HTTPSServer(String identityKeyStoreType, String identityKeyStore, String identityKeyStorePassPhrase, String identityKeyPass,
+                       String trustKeyStoreType, String trustKeyStore, String trustKeyStorePassPhrase, String trustKeyPass) throws Exception
     {
-        this.setKeystoreType(keystoreType);
-        this.setIdentityKeyStore(identityKeyStore);
-        this.setTrustKeyStore(trustKeyStore);
-        this.setIdentityKeyStorePassPhrase(identityKeyStorePassPhrase);
-        this.setTrustKeyStorePassPhrase(trustKeyStorePassPhrase);
+        validateInput(identityKeyStoreType, identityKeyStore, identityKeyStorePassPhrase,identityKeyPass, trustKeyStoreType, trustKeyStore, trustKeyStorePassPhrase,trustKeyPass);
 
-        validateInput(keystoreType, identityKeyStore, trustKeyStore, identityKeyStorePassPhrase,
-                trustKeyStorePassPhrase);
+        this.setIdentityKeyStoreType(identityKeyStoreType);
+        this.setIdentityKeyStore(identityKeyStore);
+        this.setIdentityKeyStorePassPhrase(identityKeyStorePassPhrase);
+        this.setIdentityKeyPass(identityKeyPass);
+
+        this.setTrustKeyStoreType(identityKeyStoreType);
+        this.setTrustKeyStore(trustKeyStore);
+        this.setTrustKeyStorePassPhrase(trustKeyStorePassPhrase);
+        this.setTrustKeyPass(trustKeyPass);
     }
 
     public void start() throws Exception
     {
+
+        System.out.println("IdentityKeyStoreType :"+this.getIdentityKeyStoreType());
+        System.out.println("IdentityKeyStore :"+this.getIdentityKeyStore());
+        System.out.println("IdentityKeyStorePassPhrase :"+this.getIdentityKeyStorePassPhrase());
+        System.out.println("IdentityKeyPass :"+this.getIdentityKeyPass());
+
+        System.out.println("TrustKeyStoreType :"+this.getTrustKeyStoreType());
+        System.out.println("TrustKeyStore :"+this.getTrustKeyStore());
+        System.out.println("TrustKeyStorePassPhrase :"+this.getTrustKeyStorePassPhrase());
+        System.out.println("TrustKeyPass :"+this.getTrustKeyPass());
+
         Runnable runnableServerThread = new Runnable()
         {
             @Override
@@ -90,24 +108,29 @@ public class HTTPSServer
         try
         {
 
-            if (args.length != 5)
+            if (args.length != 8)
             {
                 System.out.println("[Error]: Invalid Arguments ");
                 System.out.println(
-                        "Usage: java -classpath $CLASSPATH HTTPServer <keystoreType> <identityKeystore> <trustKeystore> <identityKeyStorePassPhrase> <trustKeyStorePassPhrase>");
+                        "Usage: java -classpath $CLASSPATH HTTPServer <identityKeystoreType> <identityKeystore> <identityKeyStorePassPhrase> <identityKeyPass>  <trustKeystoreType> <trustKeystore>  <trustKeyStorePassPhrase> <trustKeyPass>");
                 System.out.println(
-                        "Usage: java -classpath $CLASSPATH HTTPServer jks identity.jks trust.jks changeme changeme");
+                        "Usage: java -classpath $CLASSPATH HTTPServer jks identity.jks istorepass ikeypass jks trust.jks tstorepass tkeypass");
                 System.exit(1);
             }
 
-            String keystoreType = args[0];
+            String identityKeyStoreType = args[0];
             String identityKeyStore = args[1];
-            String trustKeyStore = args[2];
-            String identityKeyStorePassPhrase = args[3];
-            String trustKeyStorePassPhrase = args[4];
+            String identityKeyStorePassPhrase = args[2];
+            String identityKeyPass = args[3];
 
-            HTTPSServer httpsServer = new HTTPSServer(keystoreType, identityKeyStore, trustKeyStore,
-                    identityKeyStorePassPhrase, trustKeyStorePassPhrase);
+            String trustKeyStoreType = args[4];
+            String trustKeyStore = args[5];
+            String trustKeyStorePassPhrase = args[6];
+            String trustKeyPass = args[7];
+
+
+            HTTPSServer httpsServer = new HTTPSServer(identityKeyStoreType, identityKeyStore, identityKeyStorePassPhrase, identityKeyPass,
+                                                      trustKeyStoreType, trustKeyStore, trustKeyStorePassPhrase,trustKeyPass);
             httpsServer.start();
             // httpsServer.httpsRequest_With1WaySSLAndValidatingCertsAndClientTrustStore_Returns200OK();
         } catch (Exception e)
@@ -117,12 +140,18 @@ public class HTTPSServer
         }
     }
 
-    private static void validateInput(String keystoreType, String identityKeyStore, String trustKeyStore,
-            String identityKeyStorePassPhrase, String trustKeyStorePassPhrase)
+    private static void validateInput(String identityKeyStoreType, String identityKeyStore, String identityKeyStorePassPhrase, String identityKeyPass,
+                                      String trustKeyStoreType, String trustKeyStore , String trustKeyStorePassPhrase,String trustKeyPass)
     {
-        if ((!JAVA_KEYSTORE.equalsIgnoreCase(keystoreType)) && (!PKCS12_KEYSTORE.equalsIgnoreCase(keystoreType)))
+        if (identityKeyStoreType != null && (!JAVA_KEYSTORE.equalsIgnoreCase(identityKeyStoreType)) && (!PKCS12_KEYSTORE.equalsIgnoreCase(identityKeyStoreType)))
         {
-            System.out.println("[Error]: Invalid keystoreType : " + keystoreType);
+            System.out.println("[Error]: Invalid identityKeystoreType : " + identityKeyStoreType);
+            System.exit(1);
+        }
+
+        if (trustKeyStoreType != null && (!JAVA_KEYSTORE.equalsIgnoreCase(trustKeyStoreType)) && (!PKCS12_KEYSTORE.equalsIgnoreCase(trustKeyStoreType)))
+        {
+            System.out.println("[Error]: Invalid trustKeyStoreType : " + trustKeyStoreType);
             System.exit(1);
         }
     }
@@ -132,8 +161,7 @@ public class HTTPSServer
         try
         {
             httpclient = HttpClients.createDefault();
-            SSLContext serverSSLContext = createServerSSLContext(this.identityKeyStore,
-                    this.identityKeyStorePassPhrase.toCharArray());
+            SSLContext serverSSLContext = createServerSSLContext(this.getIdentityKeyStoreType(),this.getIdentityKeyStore(),this.getIdentityKeyStorePassPhrase().toCharArray(),this.getIdentityKeyPass().toCharArray());
 
             System.out.println("Creating Local Server listening on port 8901");
             server = createLocalTestServer(serverSSLContext, ONE_WAY_SSL);
@@ -166,22 +194,37 @@ public class HTTPSServer
      *
      * Client TrustStores store servers' certificates.
      */
-    protected KeyStore getStore(final String storeFileName, final char[] password)
+    protected KeyStore getStore(final String storeType, final String storeFileName, final char[] password)
             throws Exception
     {
         InputStream inputStream = null;
         KeyStore store = null;
         try
         {
-            store = KeyStore.getInstance(JAVA_KEYSTORE);
-            URL url = HTTPSServer.class.getClassLoader().getResource(storeFileName);
+            store = KeyStore.getInstance(storeType);
 
-            if(url == null)
-                throw new Exception("Resource "+storeFileName+" not found");
+            if(storeFileName.startsWith(File.separator))
+            {
+                File storeFile = new File(storeFileName);
 
-            inputStream = url.openStream();
+                if (! storeFile.exists())
+                {
+                    throw new Exception("Provided storeFile "+storeFile+" doesn't exist");
+                }
 
-            //InputStream inputStream = new FileInputStream(new File(storeFileName));
+                System.out.println("loading keystore file "+storeFile + " from disk");
+                inputStream = new FileInputStream(storeFile);
+            }
+            else
+            {
+                System.out.println("loading keystore file from classpath");
+                URL url = HTTPSServer.class.getClassLoader().getResource(storeFileName);
+                if(url == null)
+                    throw new Exception("Resource "+storeFileName+" not found");
+                inputStream = url.openStream();
+            }
+
+            System.out.println("password:"+new String(password));
            
             store.load(inputStream, password);
         }
@@ -236,11 +279,11 @@ public class HTTPSServer
      * Create an SSLContext for the server using the server's JKS. This instructs
      * the server to present its certificate when clients connect over HTTPS.
      */
-    protected SSLContext createServerSSLContext(final String storeFileName, final char[] password)
+    protected SSLContext createServerSSLContext(final String storeType, final String storeFileName, final char[] storepass,final char[] keypass)
             throws Exception
     {
-        KeyStore serverKeyStore = getStore(storeFileName, password);
-        KeyManager[] serverKeyManagers = getKeyManagers(serverKeyStore, password);
+        KeyStore serverKeyStore = getStore(storeType, storeFileName, storepass);
+        KeyManager[] serverKeyManagers = getKeyManagers(serverKeyStore, keypass);
         TrustManager[] serverTrustManagers = getTrustManagers(serverKeyStore);
 
         SSLContext sslContext = SSLContexts.custom().useProtocol("TLS").build();
@@ -269,7 +312,7 @@ public class HTTPSServer
         this.trustKeyStore = trustKeyStore;
     }
 
-    public Object getIdentityKeyStorePassPhrase()
+    public String getIdentityKeyStorePassPhrase()
     {
         return identityKeyStorePassPhrase;
     }
@@ -277,6 +320,16 @@ public class HTTPSServer
     public void setIdentityKeyStorePassPhrase(String identityKeyStorePassPhrase)
     {
         this.identityKeyStorePassPhrase = identityKeyStorePassPhrase;
+    }
+
+    public String getIdentityKeyPass()
+    {
+        return identityKeyPass;
+    }
+
+    public void setIdentityKeyPass(String identityKeyPass)
+    {
+        this.identityKeyPass = identityKeyPass;
     }
 
     public String getTrustKeyStorePassPhrase()
@@ -289,11 +342,40 @@ public class HTTPSServer
         this.trustKeyStorePassPhrase = trustKeyStorePassPhrase;
     }
 
+    public void setTrustKeyPass(String trustKeyPass)
+    {
+        this.trustKeyPass = trustKeyPass;
+    }
+
+    public String getTrustKeyPass()
+    {
+        return trustKeyPass;
+    }
+
+    public String getIdentityKeyStoreType()
+    {
+        return identityKeyStoreType;
+    }
+
+    public void setIdentityKeyStoreType(String identityKeyStoreType)
+    {
+        this.identityKeyStoreType = identityKeyStoreType;
+    }
+
+    public String getTrustKeyStoreType()
+    {
+        return trustKeyStoreType;
+    }
+
+    public void setTrustKeyStoreType(String trustKeyStoreType)
+    {
+        this.trustKeyStoreType = trustKeyStoreType;
+    }
+
     public boolean httpsRequest_With1WaySSLAndValidatingCertsAndClientTrustStore_Returns200OK() throws Exception
     {
         try
         {
-            
             String baseUrl = getBaseUrl(server);
     
             // The server certificate was imported into the client's TrustStore (using
@@ -304,12 +386,12 @@ public class HTTPSServer
             if(trustKeyStore != null)
             {
                  System.out.println("Setting provided trustkeystore");
-                 clientTrustStore = getStore(trustKeyStore, trustKeyStorePassPhrase.toCharArray());
+                 clientTrustStore = getStore(this.getTrustKeyStoreType(), this.getTrustKeyStore(), this.getTrustKeyStorePassPhrase().toCharArray());
             }
             else
             {
                 System.out.println("Setting identity keystore itself as trustkeystore");
-                clientTrustStore = getStore(identityKeyStore, identityKeyStorePassPhrase.toCharArray());
+                clientTrustStore = getStore(this.getIdentityKeyStoreType(), this.getIdentityKeyStore(), this.getIdentityKeyStorePassPhrase().toCharArray());
             }
             
             SSLContext sslContext = new SSLContextBuilder()
@@ -360,15 +442,4 @@ public class HTTPSServer
         else
             throw new Exception("Unable to obtain server baseURL as server is not running");
     }
-
-    public String getKeystoreType()
-    {
-        return keystoreType;
-    }
-
-    public void setKeystoreType(String keystoreType)
-    {
-        this.keystoreType = keystoreType;
-    }
-
 }
