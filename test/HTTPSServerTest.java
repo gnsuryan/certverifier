@@ -23,12 +23,16 @@ public class HTTPSServerTest
         try
         {
             System.out.println("################### testJKSWithBothIdentityAndTrustKeyStores #################");
-            String keyStoreType="jks";
+            String identityKeyStoreType="jks";
             String identityJKS="identity.jks";
+            String identityKeystorePass="Gumby12340987";
             String identityKeyPass="Gumby12340987";
+            String trustKeyStoreType="jks";
             String trustJKS="trust.jks";
+            String trustKeyStorePass="Gumby12340987";
             String trustKeyPass="Gumby12340987";
-            server = new HTTPSServer(keyStoreType,identityJKS,trustJKS,identityKeyPass,trustKeyPass);
+
+            server = new HTTPSServer(identityKeyStoreType,identityJKS,identityKeystorePass,identityKeyPass,trustKeyStoreType,trustJKS,trustKeyStorePass,trustKeyPass);
             server.start();
             
             System.out.println("Waiting for Server to Start ...");
@@ -53,12 +57,16 @@ public class HTTPSServerTest
         try
         {
             System.out.println("################### testPKCS12WithBothIdentityAndTrustKeyStores #################");
-            String keyStoreType="pkcs12";
+            String identityKeyStoreType="pkcs12";
             String identityJKS="identity.p12";
+            String identityKeystorePass="Gumby12340987";
             String identityKeyPass="Gumby12340987";
+            String trustKeyStoreType="pkcs12";
             String trustJKS="trust.p12";
+            String trustKeyStorePass="Gumby12340987";
             String trustKeyPass="Gumby12340987";
-            server = new HTTPSServer(keyStoreType,identityJKS,trustJKS,identityKeyPass,trustKeyPass);
+
+            server = new HTTPSServer(identityKeyStoreType,identityJKS,identityKeystorePass,identityKeyPass,trustKeyStoreType,trustJKS,trustKeyStorePass,trustKeyPass);
             server.start();
             
             System.out.println("Waiting for Server to Start ...");
@@ -83,12 +91,16 @@ public class HTTPSServerTest
         try
         {
             System.out.println("################### testJKSWithOnlyIdentityKeyStore #################");
-            String keyStoreType="pkcs12";
+            String identityKeyStoreType="jks";
             String identityJKS="identity.jks";
+            String identityKeystorePass="Gumby12340987";
             String identityKeyPass="Gumby12340987";
+            String trustKeyStoreType=null;
             String trustJKS=null;
+            String trustKeyStorePass=null;
             String trustKeyPass=null;
-            server = new HTTPSServer(keyStoreType,identityJKS,trustJKS,identityKeyPass,trustKeyPass);
+
+            server = new HTTPSServer(identityKeyStoreType,identityJKS,identityKeystorePass,identityKeyPass,trustKeyStoreType,trustJKS,trustKeyStorePass,trustKeyPass);
             server.start();
             
             System.out.println("Waiting for Server to Start ...");
@@ -113,12 +125,16 @@ public class HTTPSServerTest
         try
         {
             System.out.println("################### testPKCS12WithOnlyIdentityKeyStore #################");
-            String keyStoreType="pkcs12";
+            String identityKeyStoreType="pkcs12";
             String identityJKS="identity.p12";
+            String identityKeystorePass="Gumby12340987";
             String identityKeyPass="Gumby12340987";
+            String trustKeyStoreType=null;
             String trustJKS=null;
+            String trustKeyStorePass=null;
             String trustKeyPass=null;
-            server = new HTTPSServer(keyStoreType,identityJKS,trustJKS,identityKeyPass,trustKeyPass);
+
+            server = new HTTPSServer(identityKeyStoreType,identityJKS,identityKeystorePass,identityKeyPass,trustKeyStoreType,trustJKS,trustKeyStorePass,trustKeyPass);
             server.start();
             
             System.out.println("Waiting for Server to Start ...");
@@ -142,12 +158,17 @@ public class HTTPSServerTest
         try
         {
             System.out.println("################### testJKSWithInvalidKeyStores #################");
-            String keyStoreType="jks";
+            String identityKeyStoreType="jks";
             String identityJKS="invalidIdentity.jks";
-            String trustJKS="invalidTrust.jks";
+            String identityKeystorePass="Gumby12340987";
             String identityKeyPass="Gumby12340987";
+
+            String trustKeyStoreType="jks";
+            String trustJKS="invalidTrust.jks";
+            String trustKeyStorePass="Gumby12340987";
             String trustKeyPass="Gumby12340987";
-            server = new HTTPSServer(keyStoreType,identityJKS,trustJKS,identityKeyPass,trustKeyPass);
+
+            server = new HTTPSServer(identityKeyStoreType,identityJKS,identityKeystorePass,identityKeyPass,trustKeyStoreType,trustJKS,trustKeyStorePass,trustKeyPass);
             server.start();
             
             System.out.println("Waiting for Server to Start ...");
@@ -173,13 +194,16 @@ public class HTTPSServerTest
         {
             System.out.println("################### testPKCS12WithInvalidKeyStores #################");
             
-            String keyStoreType="pkcs12";
+            String identityKeyStoreType="pkcs12";
             String identityJKS="invalidIdentity.p12";
-            String identityKeyPass="Gumby12340987";            
+            String identityKeystorePass="Gumby12340987";
+            String identityKeyPass="Gumby12340987";
+            String trustKeyStoreType="pkcs12";
             String trustJKS="invalidTrust.p12";
+            String trustKeyStorePass="Gumby12340987";
             String trustKeyPass="Gumby12340987";
             
-            server = new HTTPSServer(keyStoreType,identityJKS,trustJKS,identityKeyPass,trustKeyPass);
+            server = new HTTPSServer(identityKeyStoreType,identityJKS,identityKeystorePass,identityKeyPass,trustKeyStoreType,trustJKS,trustKeyStorePass,trustKeyPass);
             server.start();
             
             System.out.println("Waiting for Server to Start ...");
@@ -204,12 +228,16 @@ public class HTTPSServerTest
         try
         {
             System.out.println("################### testJKSWithWrongIdentityKeyStorePassphrase #################");
-            String keyStoreType="jks";
+            String identityKeyStoreType="jks";
             String identityJKS="identity.jks";
+            String identityKeystorePass="wrongpassword";      
             String identityKeyPass="wrongpassword";
+            String trustKeyStoreType="jks";
             String trustJKS="trust.jks";
+            String trustKeyStorePass="Gumby12340987";
             String trustKeyPass="Gumby12340987";
-            server = new HTTPSServer(keyStoreType,identityJKS,trustJKS,identityKeyPass,trustKeyPass);
+
+            server = new HTTPSServer(identityKeyStoreType,identityJKS,identityKeystorePass,identityKeyPass,trustKeyStoreType,trustJKS,trustKeyStorePass,trustKeyPass);
             server.start();
             
             System.out.println("Waiting for Server to Start ...");
@@ -234,12 +262,16 @@ public class HTTPSServerTest
         try
         {
             System.out.println("################### testPKCS12WithWrongIdentityKeyStorePassphrase #################");
-            String keyStoreType="pkcs12";
+            String identityKeyStoreType="pkcs12";
             String identityJKS="identity.p12";
+            String identityKeystorePass="wrongpassword";
             String identityKeyPass="wrongpassword";
+            String trustKeyStoreType="pkcs12";
             String trustJKS="trust.p12";
+            String trustKeyStorePass="Gumby12340987";
             String trustKeyPass="Gumby12340987";
-            server = new HTTPSServer(keyStoreType,identityJKS,trustJKS,identityKeyPass,trustKeyPass);
+
+            server = new HTTPSServer(identityKeyStoreType,identityJKS,identityKeystorePass,identityKeyPass,trustKeyStoreType,trustJKS,trustKeyStorePass,trustKeyPass);
             server.start();
             
             System.out.println("Waiting for Server to Start ...");
@@ -253,7 +285,7 @@ public class HTTPSServerTest
         catch (Exception e)
         {
             e.printStackTrace();
-            fail("Error occured while executing testJKS Test. Test Failed !!");
+            fail("Error occured while executing testPKCS12 Test. Test Failed !!");
         }
         
     }
@@ -264,12 +296,16 @@ public class HTTPSServerTest
         try
         {
             System.out.println("################### testJKSWithWrongTrustKeyStorePassphrase #################");
-            String keyStoreType="jks";
+            String identityKeyStoreType="jks";
             String identityJKS="identity.jks";
+            String identityKeystorePass="Gumby12340987";
             String identityKeyPass="Gumby12340987";
+            String trustKeyStoreType="jks";
             String trustJKS="trust.jks";
+            String trustKeyStorePass="wrongpassword";
             String trustKeyPass="wrongpassword";
-            server = new HTTPSServer(keyStoreType,identityJKS,trustJKS,identityKeyPass,trustKeyPass);
+
+            server = new HTTPSServer(identityKeyStoreType,identityJKS,identityKeystorePass,identityKeyPass,trustKeyStoreType,trustJKS,trustKeyStorePass,trustKeyPass);
             server.start();
             
             System.out.println("Waiting for Server to Start ...");
@@ -294,12 +330,15 @@ public class HTTPSServerTest
         try
         {
             System.out.println("################### testPKCS12WithWrongTrustKeyStorePassphrase #################");
-            String keyStoreType="pkcs12";
+            String identityKeyStoreType="pkcs12";
             String identityJKS="identity.p12";
+            String identityKeystorePass="Gumby12340987";
             String identityKeyPass="Gumby12340987";
+            String trustKeyStoreType="pkcs12";
             String trustJKS="trust.p12";
+            String trustKeyStorePass="wrongpassword";
             String trustKeyPass="wrongpassword";
-            server = new HTTPSServer(keyStoreType,identityJKS,trustJKS,identityKeyPass,trustKeyPass);
+            server = new HTTPSServer(identityKeyStoreType,identityJKS,identityKeystorePass,identityKeyPass,trustKeyStoreType,trustJKS,trustKeyStorePass,trustKeyPass);
             server.start();
             
             System.out.println("Waiting for Server to Start ...");
@@ -324,12 +363,16 @@ public class HTTPSServerTest
         try
         {
             System.out.println("################### testJKSWithUnrelatedTrustKeyStorePassphrase #################");
-            String keyStoreType="jks";
+            String identityKeyStoreType="jks";
             String identityJKS="identity.jks";
+            String identityKeystorePass="Gumby12340987";
             String identityKeyPass="Gumby12340987";
+            String trustKeyStoreType="jks";
             String trustJKS="unrelatedTrust.jks";
+            String trustKeyStorePass="Gumby12340987";
             String trustKeyPass="Gumby12340987";
-            server = new HTTPSServer(keyStoreType,identityJKS,trustJKS,identityKeyPass,trustKeyPass);
+
+            server = new HTTPSServer(identityKeyStoreType,identityJKS,identityKeystorePass,identityKeyPass,trustKeyStoreType,trustJKS,trustKeyStorePass,trustKeyPass);
             server.start();
             
             System.out.println("Waiting for Server to Start ...");
@@ -354,12 +397,16 @@ public class HTTPSServerTest
         try
         {
             System.out.println("################### testJKSWithUnrelatedIdentityKeyStorePassphrase #################");
-            String keyStoreType="jks";
+            String identityKeyStoreType="jks";
             String identityJKS="unrelatedIdentity.jks";
+            String identityKeystorePass="Gumby12340987";
             String identityKeyPass="Gumby12340987";
+            String trustKeyStoreType="jks";
             String trustJKS="trust.jks";
+            String trustKeyStorePass="Gumby12340987";
             String trustKeyPass="Gumby12340987";
-            server = new HTTPSServer(keyStoreType,identityJKS,trustJKS,identityKeyPass,trustKeyPass);
+
+            server = new HTTPSServer(identityKeyStoreType,identityJKS,identityKeystorePass,identityKeyPass,trustKeyStoreType,trustJKS,trustKeyStorePass,trustKeyPass);
             server.start();
             
             System.out.println("Waiting for Server to Start ...");
@@ -384,12 +431,16 @@ public class HTTPSServerTest
         try
         {
             System.out.println("################### testJKSForOHSSetup #################");
-            String keyStoreType="pkcs12";
+            String identityKeyStoreType="jks";
             String identityJKS="selfOHS.jks";
+            String identityKeystorePass="Gumby12340987";
             String identityKeyPass="Gumby12340987";
+            String trustKeyStoreType=null;
             String trustJKS=null;
+            String trustKeyStorePass=null;
             String trustKeyPass=null;
-            server = new HTTPSServer(keyStoreType,identityJKS,trustJKS,identityKeyPass,trustKeyPass);
+
+            server = new HTTPSServer(identityKeyStoreType,identityJKS,identityKeystorePass,identityKeyPass,trustKeyStoreType,trustJKS,trustKeyStorePass,trustKeyPass);
             server.start();
             
             System.out.println("Waiting for Server to Start ...");
@@ -414,12 +465,17 @@ public class HTTPSServerTest
         try
         {
             System.out.println("################### testPKCS12ForOHSSetup #################");
-            String keyStoreType="pkcs12";
+            String identityKeyStoreType="pkcs12";
             String identityJKS="selfOHS.p12";
+            String identityKeystorePass="Gumby12340987";
             String identityKeyPass="Gumby12340987";
+
+            String trustKeyStoreType=null;
             String trustJKS=null;
+            String trustKeyStorePass=null;
             String trustKeyPass=null;
-            server = new HTTPSServer(keyStoreType,identityJKS,trustJKS,identityKeyPass,trustKeyPass);
+
+            server = new HTTPSServer(identityKeyStoreType,identityJKS,identityKeystorePass,identityKeyPass,trustKeyStoreType,trustJKS,trustKeyStorePass,trustKeyPass);
             server.start();
             
             System.out.println("Waiting for Server to Start ...");
@@ -444,12 +500,16 @@ public class HTTPSServerTest
         try
         {
             System.out.println("################### testPFXCertificateForAppGateway #################");
-            String keyStoreType="pkcs12";
+            String identityKeyStoreType="pkcs12";
             String identityJKS="certificate.pfx";
+            String identityKeystorePass="Azure123456!";
             String identityKeyPass="Azure123456!";
+            String trustKeyStoreType=null;
             String trustJKS=null;
+            String trustKeyStorePass=null;
             String trustKeyPass=null;
-            server = new HTTPSServer(keyStoreType,identityJKS,trustJKS,identityKeyPass,trustKeyPass);
+
+            server = new HTTPSServer(identityKeyStoreType,identityJKS,identityKeystorePass,identityKeyPass,trustKeyStoreType,trustJKS,trustKeyStorePass,trustKeyPass);
             server.start();
             
             System.out.println("Waiting for Server to Start ...");
@@ -468,4 +528,37 @@ public class HTTPSServerTest
         
     }
 
+    @Test
+    public void testJKSWithDifferentKeyPassAndStorePass()
+    {
+        try
+        {
+            System.out.println("################### testJKSWithDifferentKeyPassAndStorePass #################");
+            String identityKeyStoreType="jks";
+            String identityJKS="DifferentKeyPassStorePassIdentity.jks";
+            String identityKeystorePass="DemoIdentityKeyStorePassPhrase";
+            String identityKeyPass="DemoIdentityPassPhrase";
+
+            String trustKeyStoreType="jks";
+            String trustJKS="DifferentKeyPassStorePassTrust.jks";
+            String trustKeyStorePass="DemoTrustKeyStorePassPhrase";
+            String trustKeyPass="DemoTrustKeyStorePassPhrase";
+
+            server = new HTTPSServer(identityKeyStoreType,identityJKS,identityKeystorePass,identityKeyPass,trustKeyStoreType,trustJKS,trustKeyStorePass,trustKeyPass);
+            server.start();
+
+            System.out.println("Waiting for Server to Start ...");
+            Thread.sleep(2000);
+
+            assertTrue("testJKS Failed !! ",server.httpsRequest_With1WaySSLAndValidatingCertsAndClientTrustStore_Returns200OK());
+
+            System.out.println("Test passed successfully");
+            System.out.println("################### testJKSWithDifferentKeyPassAndStorePass #################");
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            fail("Error occured while executing testPFXCertificateForAppGateway Test. Test Failed !!");
+        }
+    }
 }
