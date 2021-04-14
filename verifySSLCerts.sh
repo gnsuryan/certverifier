@@ -30,5 +30,5 @@ then
  exit 1
 fi
 
-echo "running tests..."
-$JAVA_HOME/bin/java -classpath $(printf %s: $CURR_DIR/lib/*.jar):$OUTPUT_DIR:$CURR_DIR/test/keystores org.junit.runner.JUnitCore HTTPSServerTest 
+echo "running validation program ..."
+$JAVA_HOME/bin/java -classpath $(printf %s: $CURR_DIR/lib/*.jar):$OUTPUT_DIR ValidateSSLCertMain "$1" "$2" "$3" "$4" "$5" "$6" "$7" "$8"
