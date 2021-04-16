@@ -20,107 +20,59 @@ public class ValidateSSLCertMain
 
    public static void main(String[] args)
    {
-
-        validateArgs(args);
-
-        if(startServerAndValidateCert())
+       try
         {
-           System.out.println("Certificates Validated Successfully");
-           System.exit(0);
-        }
-        else
-        {
-           System.out.println("Certificate Validation Failed !!");
-           System.exit(1);
-        }
-    }
 
-    public static void validateArgs(String[] args)
-    {
-        if(args.length != 4 && args.length != 8)
-        {
-             StringBuffer usageString = new StringBuffer();
-             usageString.append("Invalid Arguments: Please provide identityKeyStoreType info or both identityKeyStoreType and trustKeyStoreType info");
-             usageString.append("Usage: java -classpath $CLASSPATH ValidateSSLCertMain <identityKeystoreType> <identityKeyStoreBase64String> <identityKeyStorePassPhraseBase64String> <identityKeyPassBase64String> ");
-             usageString.append("[<trustKeyStoreType>] [<trustKeyStoreBase64String>] [<trustKeyStorePassPhraseBase64String]> [<trustKeyPassBase64String]>");
-             System.out.println(usageString);
-             System.exit(1);
-        }
-
-        for(int i=0;i<args.length;i++)
-            System.out.println(" ["+i+"] : "+args[i]);
-
-        try
-        {
-            identityKeyStoreType=args[0];
-            identityKeyStorePassPhrase = new String(Base64.getDecoder().decode(args[2]));
-            identityKeyPass = new String(Base64.getDecoder().decode(args[3]));
-
-            OutputStream identityFileOS = null;
-            try
+           if(args.length != 4 && args.length != 8)
             {
-                byte[] identityKeyStoreBase64Bytes = Base64.getDecoder().decode(args[1]);
-                identityKeyStoreFileName="/tmp/identityKeyStoreFile.keystore";
-                File identityKeyStoreFile = new File(identityKeyStoreFileName);
-                identityKeyStoreFile.delete();
-                identityFileOS = new FileOutputStream(identityKeyStoreFile);
-                identityFileOS.write(identityKeyStoreBase64Bytes);
-  
-            }
-            catch (Exception fw)
-            {
-                fw.printStackTrace();
-            }
-            finally
-            {
-                if( identityFileOS != null)
-                    identityFileOS.close();
+                 StringBuffer usageString = new StringBuffer();
+                 usageString.append("Invalid Arguments: Please provide identityKeyStoreType info or both identityKeyStoreType and trustKeyStoreType info");
+                 usageString.append("Usage: java -classpath $CLASSPATH ValidateSSLCertMain <identityKeystoreType> <identityKeyStoreFileName> <identityKeyStorePassPhrase> <identityKeyPass> ");
+                 usageString.append("[<trustKeyStoreType>] [<trustKeyStoreFileName>] [<trustKeyStorePassPhrase]> [<trustKeyPass]>");
+                 System.out.println(usageString);
+                 System.exit(1);
             }
 
-            if(args.length == 8)
-            {
-                OutputStream trustFileOS = null;
-                trustKeyStoreType = args[4];
-                trustKeyStorePassPhrase = new String(Base64.getDecoder().decode(args[6]));
-                trustKeyPass = new String(Base64.getDecoder().decode(args[6]));
-                
-                try
-                {
-                    byte[] trustKeyStoreBase64Bytes = Base64.getDecoder().decode(args[5]);
-                    trustKeyStoreFileName="/tmp/trustKeyStoreFile.keystore";
-                    File trustKeyStoreFile = new File(trustKeyStoreFileName);
-                    trustKeyStoreFile.delete();
-                    trustFileOS = new FileOutputStream(trustKeyStoreFile);
-                    trustFileOS.write(trustKeyStoreBase64Bytes);
+            String identityKeystoreType=args[0];
+            String identityKeyStoreFileName=args[1];
+            String identityKeyStorePassPhrase=args[2];
+            String identityKeyPass=args[3];
 
-                }
-                catch (Exception fw1)
-                {
-                    fw1.printStackTrace();
-                }
-                finally
-                {
-                    if( trustFileOS != null)
-                        trustFileOS.close();
-                }
+            String trustKeyStoreType = null;
+            String trustKeyStoreFileName = null;
+            String trustKeyStorePassPhrase = null;
+            String trustKeyPass = null;
+
+            if(args.length > 4)
+            {
+                trustKeyStoreType=args[4];
+                trustKeyStoreFileName=args[5];
+                trustKeyStorePassPhrase=args[6];
+                trustKeyPass=args[7];
+            }
+
+            if(startServerAndValidateCert(identityKeystoreType,identityKeyStoreFileName,identityKeyStorePassPhrase,
+                identityKeyPass,trustKeyStoreType,trustKeyStoreFileName,trustKeyStorePassPhrase,trustKeyPass))
+            {
+               System.out.println("Certificates Validated Successfully");
+               System.exit(0);
             }
             else
             {
-                trustKeyStoreType = null;
-                trustKeyStoreFileName = null;
-                trustKeyStorePassPhrase = null;
+               System.out.println("Certificate Validation Failed !!");
+               System.exit(1);
             }
         }
         catch (Exception e)
         {
             e.printStackTrace();
+            System.out.println("Error occured while executing Validator Program "+e.getMessage());
+            System.exit(1);
         }
-
-        
     }
 
-
-    public static boolean startServerAndValidateCert()
+    public static boolean startServerAndValidateCert(String identityKeyStoreType,String identityKeyStoreFileName,String identityKeyStorePassPhrase,
+                  String identityKeyPass,String trustKeyStoreType,String trustKeyStoreFileName,String trustKeyStorePassPhrase, String trustKeyPass)
     {
         try
         {
