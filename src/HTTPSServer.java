@@ -80,13 +80,13 @@ public class HTTPSServer
 
         System.out.println("IdentityKeyStoreType :"+this.getIdentityKeyStoreType());
         System.out.println("IdentityKeyStore :"+this.getIdentityKeyStore());
-        //System.out.println("IdentityKeyStorePassPhrase :"+this.getIdentityKeyStorePassPhrase());
-        //System.out.println("IdentityKeyPass :"+this.getIdentityKeyPass());
+        System.out.println("IdentityKeyStorePassPhrase :"+this.getIdentityKeyStorePassPhrase());
+        System.out.println("IdentityKeyPass :"+this.getIdentityKeyPass());
 
         System.out.println("TrustKeyStoreType :"+this.getTrustKeyStoreType());
         System.out.println("TrustKeyStore :"+this.getTrustKeyStore());
-        //System.out.println("TrustKeyStorePassPhrase :"+this.getTrustKeyStorePassPhrase());
-        //System.out.println("TrustKeyPass :"+this.getTrustKeyPass());
+        System.out.println("TrustKeyStorePassPhrase :"+this.getTrustKeyStorePassPhrase());
+        System.out.println("TrustKeyPass :"+this.getTrustKeyPass());
 
         Runnable runnableServerThread = new Runnable()
         {
@@ -101,6 +101,9 @@ public class HTTPSServer
 
         Thread serverThread = new Thread(runnableServerThread);
         serverThread.start();
+        
+        System.out.println("Wait for 30 seconds for the server to start");
+        Thread.sleep(30000);
     }
 
     public static void main(String args[])
